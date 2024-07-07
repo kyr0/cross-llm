@@ -139,3 +139,7 @@ export interface PromptApiOptions extends EmbeddingApiOptions {
   /** how much should the model stay focused and on topic? [0..1], whereas 1 means: alot of focus, less topics */
   autoTuneFocus?: number;
 }
+
+export type Messages = Array<
+  ChatMessage | { content: string | null; role: string }
+>;

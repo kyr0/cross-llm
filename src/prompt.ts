@@ -23,6 +23,7 @@ import {
 import type { GenerateRequest } from "cohere-ai/api";
 import type {
   LLMProvider,
+  Messages,
   Price,
   PromptApiOptions,
   PromptOptionsUnion,
@@ -33,7 +34,7 @@ import type { MessageParam } from "@anthropic-ai/sdk/resources/index.mjs";
 
 // non-streaming, single, system-prompt completion with any LLM
 export const prompt = async (
-  messages: ChatParams["messages"],
+  messages: Messages,
   providerType: LLMProvider,
   promptOptions: PromptOptionsUnion = {},
   apiOptions: PromptApiOptions = {},
@@ -130,7 +131,7 @@ export const prompt = async (
 };
 
 export const promptStreaming = async (
-  messages: ChatParams["messages"],
+  messages: Messages,
   providerType: LLMProvider,
   onChunk: (text: string, elapsedMs: number) => void,
   onStop: (
