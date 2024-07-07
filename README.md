@@ -31,7 +31,7 @@ AI models _currently_ supported:
    - ✅ Single message system prompt (instruct)
    - ✅ Multi-message prompt (chat)
    - ✅ Cost model (including flat fee)
-   - 〰️ Text Embedding (Perpflexity doesn't provide embedding endpoints_)
+   - 〰️ Text Embedding (_Perplexity doesn't provide embedding endpoints_)
 -  ✅ **VoyageAI**: Text Embedding models
    - ✅ Text Embedding
 
