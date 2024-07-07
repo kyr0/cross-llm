@@ -1,6 +1,6 @@
 import type { ChatParams } from "openai-fetch";
 import { openAIPrompt } from "./openai";
-import type { PromptApiOptions, PromptResponse } from "./interfaces";
+import type { PromptApiOptions, PromptResponse } from "../interfaces";
 
 export interface HuggingFaceBody extends ChatParams {
   model: string;

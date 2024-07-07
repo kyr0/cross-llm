@@ -1,12 +1,12 @@
 import { CohereClient } from "cohere-ai";
 import type { GenerateRequest } from "cohere-ai/api";
-import { getModel } from "./models";
+import { getModel } from "../models";
 import type {
   PromptApiOptions,
   PromptResponse,
   PromptTokenUsage,
-} from "./interfaces";
-import { calculatePrice } from "./price";
+} from "../interfaces";
+import { calculatePrice } from "../price";
 
 // uses global fetch() when in non-Node env
 export const coherePrompt = async (

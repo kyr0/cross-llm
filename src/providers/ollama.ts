@@ -1,4 +1,4 @@
-import type { PromptApiOptions, PromptResponse } from "./interfaces";
+import type { PromptApiOptions, PromptResponse } from "../interfaces";
 import { openAIPrompt } from "./openai";
 import type { ChatParams } from "openai-fetch";
 

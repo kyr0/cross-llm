@@ -1,9 +1,9 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import type { GenerateRequest } from "cohere-ai/api";
 import type { ChatParams } from "openai-fetch";
-import type { HuggingFaceBody } from "./huggingface";
-import type { OllamaBody } from "./ollama";
-import type { GeminiOptions } from "./gemini";
+import type { HuggingFaceBody } from "./providers/huggingface";
+import type { OllamaBody } from "./providers/ollama";
+import type { GeminiOptions } from "./providers/gemini";
 
 export interface PromptTokenUsage {
   completionTokens: number;

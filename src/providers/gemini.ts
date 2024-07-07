@@ -2,10 +2,10 @@ import type {
   PromptApiOptions,
   PromptResponse,
   PromptTokenUsage,
-} from "./interfaces";
-import { getModel } from "./models";
+} from "../interfaces";
+import { getModel } from "../models";
 import { type GenerateContentRequest, VertexAI } from "@google-cloud/vertexai";
-import { calculatePrice } from "./price";
+import { calculatePrice } from "../price";
 
 export interface GeminiOptions extends GenerateContentRequest {
   model: string;

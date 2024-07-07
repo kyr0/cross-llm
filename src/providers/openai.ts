@@ -4,14 +4,14 @@ import {
   type ChatParams,
   type ChatStreamResponse,
 } from "openai-fetch";
-import { getModel } from "./models";
+import { getModel } from "../models";
 import type {
   Price,
   PromptApiOptions,
   PromptResponse,
   PromptTokenUsage,
-} from "./interfaces";
-import { calculatePrice } from "./price";
+} from "../interfaces";
+import { calculatePrice } from "../price";
 
 export const openAIPrompt = async (
   body: ChatParams,

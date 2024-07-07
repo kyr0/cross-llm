@@ -4,19 +4,19 @@ import {
   mapOpenAIPromptOptions,
   openAIPrompt,
   openAIPromptStreaming,
-} from "./openai";
-import { coherePrompt } from "./cohere";
+} from "./providers/openai";
+import { coherePrompt } from "./providers/cohere";
 import {
   anthropicPrompt,
   anthropicPromptStreaming,
   autoTuneAnthropicHyperparameters,
   mapAnthropicPromptOptions,
   type AnthropicPromptOptionsUnion,
-} from "./anthropic";
-import { huggingFacePrompt } from "./huggingface";
-import { ollamaPrompt, type OllamaBody } from "./ollama";
+} from "./providers/anthropic";
+import { huggingFacePrompt } from "./providers/huggingface";
+import { ollamaPrompt, type OllamaBody } from "./providers/ollama";
 import type { ChatParams } from "openai-fetch";
-import { perplexityPrompt } from "./perplexity";
+import { perplexityPrompt } from "./providers/perplexity";
 import type { GenerateRequest } from "cohere-ai/api";
 import type {
   ModelProviderType,

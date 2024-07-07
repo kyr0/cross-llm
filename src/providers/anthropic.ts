@@ -1,13 +1,13 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { ContentBlock } from "@anthropic-ai/sdk/resources/messages.mjs";
-import { getModel } from "./models";
+import { getModel } from "../models";
 import type {
   Price,
   PromptApiOptions,
   PromptResponse,
   PromptTokenUsage,
-} from "./interfaces";
-import { calculatePrice } from "./price";
+} from "../interfaces";
+import { calculatePrice } from "../price";
 
 // uses global fetch() by default
 export const anthropicPrompt = async (

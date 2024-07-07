@@ -1,8 +1,8 @@
 import { expect, test } from "vitest";
-import { systemPrompt, systemPromptStreaming } from "./prompt";
-import models from "./models";
+import { systemPrompt, systemPromptStreaming } from "../prompt";
+import models from "../models";
 import dotenv from "dotenv";
-import type { Price, PromptTokenUsage } from "./interfaces";
+import type { Price, PromptTokenUsage } from "../interfaces";
 
 // load api keys from .env
 dotenv.config();
