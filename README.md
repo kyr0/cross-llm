@@ -17,23 +17,29 @@ AI models _currently_ supported:
    - ✅ Single message system prompt (instruct)
    - ✅ Multi-message prompt (chat)
    - ✅ Cost model 
-   - ✅ Text Embeddings
+   - ✅ Text Embedding
 -  ✅ **Anthropic**: The whole Claude model-series, including Opus.
    - ✅ Promise-based
    - ✅ Streaming 
    - ✅ Single message system prompt (instruct)
    - ✅ Multi-message prompt (chat)
    - ✅ Cost model 
-   - 〰️ Embedding (_Anthropic doesn't provide embedding endpoints_)
+   - 〰️ Text Embedding (_Anthropic doesn't provide embedding endpoints_)
+-  ✅ **Perplexity**: All models supported.
+   - ✅ Promise-based
+   - ✅ Streaming 
+   - ✅ Single message system prompt (instruct)
+   - ✅ Multi-message prompt (chat)
+   - ✅ Cost model (including flat fee)
+   - 〰️ Text Embedding (Perpflexity doesn't provide embedding endpoints_)
 -  ✅ **VoyageAI**: Text Embedding models
-   - ✅ Text Embeddings
+   - ✅ Text Embedding
 
 AI providers and models **to be supported soon**:
 -  ❌ **Google**: The whole Gemeni model-series, including 1.5 Pro, Advanced.
 -  ❌ **Cohere**: The whole Command model-series, including Command R Plus.
 -  ❌ **Ollama**: All Ollama LLMs, including Llama 3.
 -  ❌ **HuggingFace**: All HuggingFace LLMs.
--  ❌ **Perplexity**: All models.
 
 ## 📚 Usage
 
