@@ -3,7 +3,7 @@ import models from "../models";
 import dotenv from "dotenv";
 import { systemPrompt, systemPromptStreaming } from "../system-prompt";
 import { prompt, promptStreaming } from "../prompt";
-import type { Price, PromptTokenUsage } from "../interfaces";
+import type { LLMProvider, Price, Usage } from "../interfaces";
 
 // load api keys from .env
 dotenv.config();
@@ -24,7 +24,7 @@ test("System Prompt - Anthropic Sonnet 3.5 Streaming", async () => {
         async (
           fullText: string,
           elapsedMs: number,
-          usage: PromptTokenUsage,
+          usage: Usage,
           reason: string,
           price: Price,
         ) => {
@@ -36,8 +36,8 @@ test("System Prompt - Anthropic Sonnet 3.5 Streaming", async () => {
           expect(typeof elapsedMs).toEqual("number");
           expect(elapsedMs).toBeGreaterThan(0);
           expect(usage).toBeDefined();
-          expect(typeof usage.completionTokens).toEqual("number");
-          expect(typeof usage.promptTokens).toEqual("number");
+          expect(typeof usage.outputTokens).toEqual("number");
+          expect(typeof usage.inputTokens).toEqual("number");
           expect(typeof usage.totalTokens).toEqual("number");
           expect(price).toBeDefined();
           expect(typeof price.input).toEqual("number");
@@ -92,7 +92,7 @@ test("Multi-message Prompt - Anthropic Sonnet 3.5 Streaming", async () => {
         async (
           fullText: string,
           elapsedMs: number,
-          usage: PromptTokenUsage,
+          usage: Usage,
           reason: string,
           price: Price,
         ) => {
@@ -104,8 +104,8 @@ test("Multi-message Prompt - Anthropic Sonnet 3.5 Streaming", async () => {
           expect(typeof elapsedMs).toEqual("number");
           expect(elapsedMs).toBeGreaterThan(0);
           expect(usage).toBeDefined();
-          expect(typeof usage.completionTokens).toEqual("number");
-          expect(typeof usage.promptTokens).toEqual("number");
+          expect(typeof usage.outputTokens).toEqual("number");
+          expect(typeof usage.inputTokens).toEqual("number");
           expect(typeof usage.totalTokens).toEqual("number");
           expect(price).toBeDefined();
           expect(typeof price.input).toEqual("number");
@@ -154,8 +154,8 @@ test("System Prompt - Anthropic Opus 3 Non-Streaming", async () => {
   expect(result.finishReason?.length).toBeGreaterThan(0);
   expect(typeof result.elapsedMs).toEqual("number");
   expect(result.elapsedMs).toBeGreaterThan(0);
-  expect(typeof result.usage?.completionTokens).toEqual("number");
-  expect(typeof result.usage?.promptTokens).toEqual("number");
+  expect(typeof result.usage?.outputTokens).toEqual("number");
+  expect(typeof result.usage?.inputTokens).toEqual("number");
   expect(typeof result.usage?.totalTokens).toEqual("number");
   expect(result.price).toBeDefined();
   expect(typeof result.price?.input).toEqual("number");
@@ -181,7 +181,7 @@ test("Multi-message Prompt - Anthropic Opus 3 Non-Streaming", async () => {
         content: "Respond with JSON: { works: true }",
       },
     ],
-    model.provider,
+    model.provider as LLMProvider,
     {
       // union of parameters passed down, mapped internally
       model: model.id,
@@ -199,8 +199,8 @@ test("Multi-message Prompt - Anthropic Opus 3 Non-Streaming", async () => {
   expect(result.finishReason?.length).toBeGreaterThan(0);
   expect(typeof result.elapsedMs).toEqual("number");
   expect(result.elapsedMs).toBeGreaterThan(0);
-  expect(typeof result.usage?.completionTokens).toEqual("number");
-  expect(typeof result.usage?.promptTokens).toEqual("number");
+  expect(typeof result.usage?.outputTokens).toEqual("number");
+  expect(typeof result.usage?.inputTokens).toEqual("number");
   expect(typeof result.usage?.totalTokens).toEqual("number");
   expect(result.price).toBeDefined();
   expect(typeof result.price?.input).toEqual("number");

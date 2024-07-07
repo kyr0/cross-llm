@@ -5,7 +5,7 @@ import type {
   Price,
   PromptApiOptions,
   PromptResponse,
-  PromptTokenUsage,
+  Usage,
 } from "../interfaces";
 import { calculatePrice } from "../price";
 
@@ -45,9 +45,9 @@ export const anthropicPrompt = async (
   );
   const end = Date.now();
   const elapsedMs = end - start;
-  const usage: PromptTokenUsage = {
-    completionTokens: completion.usage.output_tokens,
-    promptTokens: completion.usage.input_tokens!,
+  const usage: Usage = {
+    outputTokens: completion.usage.output_tokens,
+    inputTokens: completion.usage.input_tokens!,
     totalTokens: completion.usage.input_tokens + completion.usage.output_tokens,
   };
 
@@ -57,11 +57,7 @@ export const anthropicPrompt = async (
     usage,
     finishReason: completion.stop_reason,
     elapsedMs,
-    price: calculatePrice(
-      getModel("anthropic", body.model),
-      usage.promptTokens,
-      usage.completionTokens,
-    ),
+    price: calculatePrice(getModel("anthropic", body.model), usage),
   };
 };
 
@@ -71,7 +67,7 @@ export const anthropicPromptStreaming = async (
   onStop: (
     text: string,
     elapsed: number,
-    usage: PromptTokenUsage,
+    usage: Usage,
     reason: string,
     price: Price,
   ) => void,
@@ -116,6 +112,11 @@ export const anthropicPromptStreaming = async (
     }
 
     const message = await stream.finalMessage();
+    const usage: Usage = {
+      outputTokens: message.usage.output_tokens,
+      inputTokens: message.usage.input_tokens,
+      totalTokens: message.usage.input_tokens + message.usage.output_tokens,
+    };
 
     onStop(
       message.content
@@ -123,17 +124,9 @@ export const anthropicPromptStreaming = async (
         .map((c: ContentBlock) => c.text)
         .join(""),
       Date.now() - start,
-      {
-        completionTokens: message.usage.output_tokens,
-        promptTokens: message.usage.input_tokens,
-        totalTokens: message.usage.input_tokens + message.usage.output_tokens,
-      } as PromptTokenUsage,
+      usage,
       message.stop_reason || "end_turn",
-      calculatePrice(
-        getModel("anthropic", body.model!),
-        message.usage.input_tokens,
-        message.usage.output_tokens,
-      ),
+      calculatePrice(getModel("anthropic", body.model!), usage),
     );
   } catch (error) {
     onError(error, Date.now() - start);

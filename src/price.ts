@@ -1,12 +1,16 @@
-import type { Model, Price } from "./interfaces";
+import type { Model, Price, Usage } from "./interfaces";
 
-export const calculatePrice = (
-  model: Model,
-  inputTokens: number,
-  outputTokens: number,
-): Price => {
-  const input = model.input * inputTokens;
-  const output = model.output * outputTokens;
+export const calculatePrice = (model: Model, usage: Usage): Price => {
+  if (model.provider === "voyageai") {
+    return {
+      input: model.input * usage.totalTokens,
+      output: 0,
+      total: model.input * usage.totalTokens,
+    };
+  }
+
+  const input = model.input * usage.inputTokens;
+  const output = model.output * usage.outputTokens;
   return {
     input,
     output,

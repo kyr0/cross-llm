@@ -1,8 +1,4 @@
-import type {
-  PromptApiOptions,
-  PromptResponse,
-  PromptTokenUsage,
-} from "../interfaces";
+import type { PromptApiOptions, PromptResponse, Usage } from "../interfaces";
 import { getModel } from "../models";
 import { type GenerateContentRequest, VertexAI } from "@google-cloud/vertexai";
 import { calculatePrice } from "../price";
@@ -97,9 +93,9 @@ export const geminiPrompt = async (
   const end = Date.now();
   const elapsedMs = end - start;
 
-  const usage: PromptTokenUsage = {
-    completionTokens: aggregatedResponse.usageMetadata!.candidatesTokenCount!,
-    promptTokens: aggregatedResponse.usageMetadata!.promptTokenCount!,
+  const usage: Usage = {
+    outputTokens: aggregatedResponse.usageMetadata!.candidatesTokenCount!,
+    inputTokens: aggregatedResponse.usageMetadata!.promptTokenCount!,
     totalTokens:
       aggregatedResponse.usageMetadata!.candidatesTokenCount! +
       aggregatedResponse.usageMetadata!.promptTokenCount!,
@@ -110,11 +106,7 @@ export const geminiPrompt = async (
     finishReason:
       aggregatedResponse.promptFeedback?.blockReasonMessage || "completed",
     elapsedMs,
-    price: calculatePrice(
-      getModel("gemini", body.model),
-      usage.promptTokens || 0,
-      usage.completionTokens || 0,
-    ),
+    price: calculatePrice(getModel("gemini", body.model), usage),
   };
   return response;
 };

@@ -5,9 +5,9 @@ import type { HuggingFaceBody } from "./providers/huggingface";
 import type { OllamaBody } from "./providers/ollama";
 import type { GeminiOptions } from "./providers/gemini";
 
-export interface PromptTokenUsage {
-  completionTokens: number;
-  promptTokens: number;
+export interface Usage {
+  outputTokens: number;
+  inputTokens: number;
   totalTokens: number;
 }
 
@@ -24,25 +24,10 @@ export type PromptFinishReason =
 
 export interface PromptResponse {
   message: string | null;
-  usage: PromptTokenUsage;
+  usage: Usage;
   finishReason: PromptFinishReason;
   elapsedMs: number;
   price: Price;
-}
-
-export interface PromptApiOptions {
-  baseURL?: string;
-  hostingLocation?: string;
-  apiKey?: string;
-
-  /** linear scale [0..1], whereas 0 is close to determinism */
-  autoTuneCreativity?: number;
-
-  /** how much variety of terms is desired? [0..1], whereas 0 means: use the same terms over and over */
-  autoTuneWordVariety?: number;
-
-  /** how much should the model stay focused and on topic? [0..1], whereas 1 means: alot of focus, less topics */
-  autoTuneFocus?: number;
 }
 
 export type PromptOptionsUnion =
@@ -64,27 +49,73 @@ export interface Price {
   total: number;
 }
 
-export type ModelProviderType =
+export type LLMProvider =
   | "openai"
   | "anthropic"
   | "cohere"
   | "huggingface"
   | "ollama"
   | "gemini"
-  | "perplexity";
+  | "perplexity"
+  | "voyageai";
+
+export type EmbeddingProvider = "openai" | "voyageai";
 
 export interface Model {
   input: number;
   output: number;
-  provider: ModelProviderType;
+  provider: LLMProvider | EmbeddingProvider;
   maxContextTokens: number;
   maxInputTokens: number;
-  maxOutputTokens: number;
   id: string;
   label: string;
-  cutoff: string;
+  // not relevant for Embedding models
+  maxOutputTokens?: number;
+  cutoff?: string;
+  dimensions?: number;
+  minDimensions?: number;
 }
 
 export interface Models {
   [modelPrimaryKey: string]: Model;
+}
+
+export interface EmbeddingParams {
+  model?: string;
+  truncation?: boolean;
+  input_type?: null | "query" | "document";
+  encoding_format?: null | "base64" | "float";
+  dimensions?: number;
+  user?: string;
+}
+
+export interface Embedding {
+  embedding: Array<number>;
+  index: number;
+  object: "embedding";
+}
+
+export interface EmbeddingResponse {
+  usage: Usage;
+  elapsedMs: number;
+  price: Price;
+  data: Array<Embedding>;
+}
+
+export interface EmbeddingApiOptions {
+  baseUrl?: string;
+  apiKey?: string;
+  hostingLocation?: string;
+  overrideProvider?: LLMProvider | EmbeddingProvider;
+}
+
+export interface PromptApiOptions extends EmbeddingApiOptions {
+  /** linear scale [0..1], whereas 0 is close to determinism */
+  autoTuneCreativity?: number;
+
+  /** how much variety of terms is desired? [0..1], whereas 0 means: use the same terms over and over */
+  autoTuneWordVariety?: number;
+
+  /** how much should the model stay focused and on topic? [0..1], whereas 1 means: alot of focus, less topics */
+  autoTuneFocus?: number;
 }

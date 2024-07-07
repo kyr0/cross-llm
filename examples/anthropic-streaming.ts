@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { promptStreaming, type PromptFinishReason, type PromptTokenUsage } from "../src";
+import { promptStreaming, type PromptFinishReason, type Usage } from "../src";
 
 // load api keys from .env
 dotenv.config();
@@ -30,7 +30,7 @@ await promptStreaming(
   },
   async (fullText: string, 
     elapsedMs: number,
-    usage: PromptTokenUsage,
+    usage: Usage,
     finishReason: PromptFinishReason) => {
     // onStop
     // you will get the full text here again, accumulated

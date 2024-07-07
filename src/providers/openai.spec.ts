@@ -2,8 +2,9 @@ import { expect, test } from "vitest";
 import { systemPrompt, systemPromptStreaming } from "../system-prompt";
 import models from "../models";
 import dotenv from "dotenv";
-import type { Price, PromptTokenUsage } from "../interfaces";
+import type { EmbeddingProvider, Price, Usage } from "../interfaces";
 import { prompt, promptStreaming } from "../prompt";
+import { embed } from "../embed";
 
 // load api keys from .env
 dotenv.config();
@@ -25,7 +26,7 @@ test("System Prompt - OpenAI GPT-4 Turbo Streaming", async () => {
         async (
           fullText: string,
           elapsedMs: number,
-          usage: PromptTokenUsage,
+          usage: Usage,
           reason: string,
           price: Price,
         ) => {
@@ -37,8 +38,8 @@ test("System Prompt - OpenAI GPT-4 Turbo Streaming", async () => {
           expect(typeof elapsedMs).toEqual("number");
           expect(elapsedMs).toBeGreaterThan(0);
           expect(usage).toBeDefined();
-          expect(typeof usage.completionTokens).toEqual("number");
-          expect(typeof usage.promptTokens).toEqual("number");
+          expect(typeof usage.outputTokens).toEqual("number");
+          expect(typeof usage.inputTokens).toEqual("number");
           expect(typeof usage.totalTokens).toEqual("number");
           expect(price).toBeDefined();
           expect(typeof price.input).toEqual("number");
@@ -98,7 +99,7 @@ test("Mutli-message Prompt - OpenAI GPT-4 Turbo Streaming", async () => {
         async (
           fullText: string,
           elapsedMs: number,
-          usage: PromptTokenUsage,
+          usage: Usage,
           reason: string,
           price: Price,
         ) => {
@@ -110,8 +111,8 @@ test("Mutli-message Prompt - OpenAI GPT-4 Turbo Streaming", async () => {
           expect(typeof elapsedMs).toEqual("number");
           expect(elapsedMs).toBeGreaterThan(0);
           expect(usage).toBeDefined();
-          expect(typeof usage.completionTokens).toEqual("number");
-          expect(typeof usage.promptTokens).toEqual("number");
+          expect(typeof usage.outputTokens).toEqual("number");
+          expect(typeof usage.inputTokens).toEqual("number");
           expect(typeof usage.totalTokens).toEqual("number");
           expect(price).toBeDefined();
           expect(typeof price.input).toEqual("number");
@@ -167,9 +168,12 @@ test("System Prompt - OpenAI GPT-4o Non-Streaming", async () => {
   expect(result.finishReason?.length).toBeGreaterThan(0);
   expect(typeof result.elapsedMs).toEqual("number");
   expect(result.elapsedMs).toBeGreaterThan(0);
-  expect(typeof result.usage?.completionTokens).toEqual("number");
-  expect(typeof result.usage?.promptTokens).toEqual("number");
+  expect(typeof result.usage?.outputTokens).toEqual("number");
+  expect(typeof result.usage?.inputTokens).toEqual("number");
   expect(typeof result.usage?.totalTokens).toEqual("number");
+  expect(typeof result.price?.input).toEqual("number");
+  expect(typeof result.price?.output).toEqual("number");
+  expect(typeof result.price?.total).toEqual("number");
 }, 100000);
 
 test("Multi-message Prompt - OpenAI GPT-4o Non-Streaming", async () => {
@@ -211,9 +215,46 @@ test("Multi-message Prompt - OpenAI GPT-4o Non-Streaming", async () => {
   expect(result.finishReason?.length).toBeGreaterThan(0);
   expect(typeof result.elapsedMs).toEqual("number");
   expect(result.elapsedMs).toBeGreaterThan(0);
-  expect(typeof result.usage?.completionTokens).toEqual("number");
-  expect(typeof result.usage?.promptTokens).toEqual("number");
+  expect(typeof result.usage?.outputTokens).toEqual("number");
+  expect(typeof result.usage?.inputTokens).toEqual("number");
   expect(typeof result.usage?.totalTokens).toEqual("number");
+  expect(typeof result.price?.input).toEqual("number");
+  expect(typeof result.price?.output).toEqual("number");
+  expect(typeof result.price?.total).toEqual("number");
+}, 100000);
+
+test("Embedding - text-embedding-3-small", async () => {
+  const model = models["openai-text-embedding-3-small"];
+
+  const result = await embed(
+    ["Let's have fun with JSON, shall we?", "Yeah. Let's have fun with JSON."],
+    model.provider as EmbeddingProvider,
+    {
+      // union of parameters passed down, mapped internally
+      model: model.id,
+    },
+    {
+      // union of options passed down, mapped internally
+      apiKey: import.meta.env[`${model.provider}_api_key`],
+    },
+  );
+
+  expect(typeof result.elapsedMs).toEqual("number");
+  expect(result.elapsedMs).toBeGreaterThan(0);
+  expect(typeof result.usage?.outputTokens).toEqual("number");
+  expect(typeof result.usage?.inputTokens).toEqual("number");
+  expect(typeof result.usage?.totalTokens).toEqual("number");
+  expect(result.data).toBeDefined();
+  expect(Array.isArray(result.data)).toEqual(true);
+  expect(result.data.length).toEqual(2);
+  expect(typeof result.data[0]).toEqual("object");
+  expect(typeof result.data[1]).toEqual("object");
+  expect(typeof result.data[0].index).toEqual("number");
+  expect(typeof result.data[1].index).toEqual("number");
+  expect(Array.isArray(result.data[0].embedding)).toEqual(true);
+  expect(Array.isArray(result.data[1].embedding)).toEqual(true);
+  expect(result.data[0].embedding.length).toEqual(1536);
+  expect(result.data[1].embedding.length).toEqual(1536);
 }, 100000);
 
 /*

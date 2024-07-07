@@ -19,18 +19,18 @@ import type { ChatParams } from "openai-fetch";
 import { perplexityPrompt } from "./providers/perplexity";
 import type { GenerateRequest } from "cohere-ai/api";
 import type {
-  ModelProviderType,
+  LLMProvider,
   Price,
   PromptApiOptions,
   PromptOptionsUnion,
   PromptResponse,
-  PromptTokenUsage,
+  Usage,
 } from "./interfaces";
 
 // non-streaming, single, system-prompt completion with any LLM
 export const systemPrompt = async (
   promptText: string,
-  providerType: ModelProviderType,
+  providerType: LLMProvider,
   promptOptions: PromptOptionsUnion = {},
   apiOptions: PromptApiOptions = {},
 ): Promise<PromptResponse> => {
@@ -147,12 +147,12 @@ export const systemPrompt = async (
 
 export const systemPromptStreaming = async (
   promptText: string,
-  providerType: ModelProviderType,
+  providerType: LLMProvider,
   onChunk: (text: string, elapsedMs: number) => void,
   onStop: (
     text: string,
     elapsedMs: number,
-    usage: PromptTokenUsage,
+    usage: Usage,
     finishReason: string,
     price: Price,
   ) => void,

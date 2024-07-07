@@ -3,13 +3,17 @@ import {
   OpenAIClient,
   type ChatParams,
   type ChatStreamResponse,
+  type EmbeddingParams as OpenAIEmbeddingParams,
 } from "openai-fetch";
 import { getModel } from "../models";
 import type {
+  EmbeddingApiOptions,
+  EmbeddingParams,
+  EmbeddingResponse,
   Price,
   PromptApiOptions,
   PromptResponse,
-  PromptTokenUsage,
+  Usage,
 } from "../interfaces";
 import { calculatePrice } from "../price";
 
@@ -33,21 +37,17 @@ export const openAIPrompt = async (
   const end = Date.now();
   const elapsedMs = end - start;
   const topPChoice = completion.choices[0];
-
+  const usage: Usage = {
+    outputTokens: completion.usage!.completion_tokens,
+    inputTokens: completion.usage!.prompt_tokens,
+    totalTokens: completion.usage!.total_tokens,
+  };
   return {
     message: topPChoice.message.content,
-    usage: {
-      completionTokens: completion.usage!.completion_tokens,
-      promptTokens: completion.usage!.prompt_tokens,
-      totalTokens: completion.usage!.total_tokens,
-    },
+    usage,
     finishReason: topPChoice.finish_reason,
     elapsedMs,
-    price: calculatePrice(
-      getModel("openai", body.model),
-      completion.usage?.prompt_tokens!,
-      completion.usage?.completion_tokens!,
-    ),
+    price: calculatePrice(getModel("openai", body.model), usage),
   };
 };
 
@@ -57,7 +57,7 @@ export const openAIPromptStreaming = async (
   onStop: (
     text: string,
     elapsed: number,
-    usage: PromptTokenUsage,
+    usage: Usage,
     reason: string,
     price: Price,
   ) => void,
@@ -81,7 +81,7 @@ export const openAIPromptStreaming = async (
         const reader = stream.getReader();
         let accumulated = "";
         let finishReason = "";
-        let usage: PromptTokenUsage;
+        let usage: Usage;
         let price: Price;
         const readChunk = async () => {
           try {
@@ -94,16 +94,12 @@ export const openAIPromptStreaming = async (
 
             if (value?.usage) {
               usage = {
-                completionTokens: value.usage!.completion_tokens,
-                promptTokens: value.usage!.prompt_tokens,
+                outputTokens: value.usage!.completion_tokens,
+                inputTokens: value.usage!.prompt_tokens,
                 totalTokens: value.usage!.total_tokens,
-              } as PromptTokenUsage;
+              } as Usage;
 
-              price = calculatePrice(
-                getModel("openai", body.model),
-                value.usage?.prompt_tokens!,
-                value.usage?.completion_tokens!,
-              );
+              price = calculatePrice(getModel("openai", body.model), usage);
             }
 
             if (done) {
@@ -213,4 +209,43 @@ export const autoTuneOpenAIHyperparameters = <T>(
     promptOptions.top_p = 1 - Math.max(0, options.autoTuneFocus / 2);
   }
   return promptOptions as T;
+};
+
+export const openAIEmbed = async (
+  text: string | Array<string> | Array<number> | Array<Array<number>>,
+  params: EmbeddingParams,
+  apiOptions: EmbeddingApiOptions = {},
+): Promise<EmbeddingResponse> => {
+  apiOptions = {
+    ...apiOptions,
+    apiKey: apiOptions.apiKey,
+  };
+
+  if (!params.model) {
+    params.model = "text-embedding-3-small"; // MTEB 62.3%; 6.5x cheaper than "large", only 2.3% less accurate
+  }
+
+  const openai = new OpenAIClient(apiOptions);
+  const start = Date.now();
+  const embeddings = await openai.createEmbeddings({
+    ...params,
+    input: text,
+  } as OpenAIEmbeddingParams);
+  const end = Date.now();
+  const elapsedMs = end - start;
+  const usage: Usage = {
+    inputTokens: embeddings.usage.prompt_tokens,
+    totalTokens: embeddings.usage!.total_tokens,
+    outputTokens: 0,
+  };
+
+  return {
+    usage,
+    elapsedMs,
+    price: calculatePrice(
+      getModel(apiOptions.overrideProvider || "openai", params.model),
+      usage,
+    ),
+    data: embeddings.data,
+  };
 };

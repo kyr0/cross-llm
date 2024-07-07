@@ -31,5 +31,38 @@
     "id": "gpt-3.5-turbo",
     "label": "OpenAI GPT-3.5 Turbo",
     "cutoff": "2023-09"
+  },
+  "openai-text-embedding-3-small": {
+    "provider": "openai",
+    "input": 0.00000002,
+    "output": 0,
+    "maxContextTokens": 8192,
+    "maxInputTokens": 8192,
+    "minDimensions": 2048,
+    "dimensions": 1536,
+    "id": "text-embedding-3-small",
+    "label": "OpenAI Text Embedding 3 Small"
+  },
+  "openai-text-embedding-3-large": {
+    "provider": "openai",
+    "input": 0.00000013,
+    "output": 0,
+    "maxContextTokens": 8192,
+    "maxInputTokens": 8192,
+    "minDimensions": 2048,
+    "dimensions": 3072,
+    "id": "text-embedding-3-large",
+    "label": "OpenAI Text Embedding 3 Large"
+  },
+  "openai-text-embedding-ada-002": {
+    "provider": "openai",
+    "input": 0.0000001,
+    "output": 0,
+    "maxContextTokens": 8192,
+    "maxInputTokens": 8192,
+    "minDimensions": 1536,
+    "dimensions": 1536,
+    "id": "text-embedding-ada-002",
+    "label": "OpenAI Text Embedding Ada 002"
   }
 }

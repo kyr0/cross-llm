@@ -17,7 +17,7 @@ export const ollamaPrompt = async (
   body: OllamaBody,
   apiOptions: PromptApiOptions = {},
 ): Promise<PromptResponse> => {
-  if (!apiOptions.baseURL) {
+  if (!apiOptions.baseUrl) {
     throw new Error("Please provide a base URL for the HuggingFace API");
   }
 

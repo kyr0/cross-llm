@@ -1,0 +1,13 @@
+{
+  "voyageai-voyage-large-2-instruct": {
+    "provider": "voyageai",
+    "input": 0.0000001,
+    "output": 0,
+    "maxContextTokens": 16000,
+    "maxInputTokens": 16000,
+    "minDimensions": 1024,
+    "dimensions": 1024,
+    "id": "voyage-large-2-instruct",
+    "label": "VoyageAI Voyage Large 2 Instruct"
+  }
+}
