@@ -50,7 +50,7 @@ const promptResonse = await systemPrompt("Respond with JSON: { works: true }", "
   model: "claude-3-haiku-20240307",
   temperature: 0.7,
   max_tokens: 4096
-}, { apiKey: process.env[`anthropic_api_key`] });
+}, { apiKey: import.meta.env[`anthropic_api_key`] });
 
 // promptResponse.message => {\n  "works": true\n}
 // promptResponse.usage.outputTokens => 12
@@ -69,7 +69,7 @@ import { embed } from "cross-llm";
 
 const textEmbedding = await embed(["Let's have fun with JSON, shall we?"], "voyageai", {
   model: "voyage-large-2-instruct",
-}, { apiKey: process.env[`voyageai_api_key`], });
+}, { apiKey: import.meta.env[`voyageai_api_key`], });
 
 // textEmbedding.data[0].embedding => [0.1134245, ...] // n-dimensional embedding vector
 // textEmbedding.data[0].index => 0
@@ -131,7 +131,7 @@ await promptStreaming(
   },
   {
     // union of options passed down, mapped internally
-    apiKey: process.env[`openai_api_key`],
+    apiKey: import.meta.env[`openai_api_key`],
   },
 );
 ```
