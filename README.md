@@ -80,7 +80,7 @@ const textEmbedding = await embed(["Let's have fun with JSON, shall we?"], "voya
 
 #### Multi-Message Prompt, Streaming
 ```ts
-import { systemPrompt } from "cross-llm";
+import { promptStreaming, type PromptFinishReason, type Usage, type Price } from "cross-llm";
 
 await promptStreaming(
   [
