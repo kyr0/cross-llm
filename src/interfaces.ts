@@ -28,6 +28,23 @@ export interface PromptResponse {
   finishReason: PromptFinishReason;
   elapsedMs: number;
   price: Price;
+  raw: any;
+  rawBody: any;
+}
+
+export interface PerplexityBody extends ChatParams {
+  model: // Meta/Perplexity models
+    | "llama-3-sonar-small-32k-chat"
+    | "llama-3-sonar-small-32k-online"
+    | "llama-3-sonar-large-32k-chat"
+    | "llama-3-sonar-large-32k-online"
+    // Open-source models
+    //| "llama-3-8b-instruct"
+    //| "llama-3-70b-instruct"
+    //| "mixtral-8x7b-instruct"
+    | string /** https://docs.perplexity.ai/docs/model-cards */;
+  return_citations?: boolean;
+  return_images?: boolean;
 }
 
 export type PromptOptionsUnion =
@@ -37,7 +54,8 @@ export type PromptOptionsUnion =
   | Partial<ChatParams>
   | Partial<HuggingFaceBody>
   | Partial<OllamaBody>
-  | Partial<GeminiOptions>;
+  | Partial<GeminiOptions>
+  | Partial<PerplexityBody>;
 
 export type PromptMessagesUnion =
   | Partial<Anthropic.Messages.MessageParam[]>
@@ -67,6 +85,8 @@ export interface Model {
   provider: LLMProvider | EmbeddingProvider;
   maxContextTokens: number;
   maxInputTokens: number;
+  // https://docs.perplexity.ai/docs/pricing
+  flatFee?: number; // flat surcharge in cents (e.g. perplexity for their -online models)
   id: string;
   label: string;
   // not relevant for Embedding models

@@ -1,0 +1,44 @@
+{
+  "perplexity-llama-3-sonar-small-32k-chat": {
+    "provider": "perplexity",
+    "input": 0.0000002,
+    "output": 0.0000002,
+    "maxContextTokens": 40960,
+    "maxInputTokens": 32768,
+    "maxOutputTokens": 8192,
+    "id": "llama-3-sonar-small-32k-chat",
+    "label": "Perplexity Llama 3 Sonar Small 32k Chat"
+  },
+  "perplexity-llama-3-sonar-small-32k-online": {
+    "provider": "perplexity",
+    "input": 0.0000002,
+    "output": 0.0000002,
+    "flatFee": 0.005,
+    "maxContextTokens": 40960,
+    "maxInputTokens": 32768,
+    "maxOutputTokens": 8192,
+    "id": "llama-3-sonar-small-32k-online",
+    "label": "Perplexity Llama 3 Sonar Small 32k Online"
+  },
+  "perplexity-llama-3-sonar-large-32k-chat": {
+    "provider": "perplexity",
+    "input": 0.000001,
+    "output": 0.000001,
+    "maxContextTokens": 40960,
+    "maxInputTokens": 32768,
+    "maxOutputTokens": 8192,
+    "id": "llama-3-sonar-large-32k-chat",
+    "label": "Perplexity Llama 3 Sonar Large 32k Chat"
+  },
+  "perplexity-llama-3-sonar-large-32k-online": {
+    "provider": "perplexity",
+    "input": 0.000001,
+    "output": 0.000001,
+    "flatFee": 0.005,
+    "maxContextTokens": 40960,
+    "maxInputTokens": 32768,
+    "maxOutputTokens": 8192,
+    "id": "llama-3-sonar-large-32k-online",
+    "label": "Perplexity Llama 3 Sonar Large 32k Online"
+  }
+}

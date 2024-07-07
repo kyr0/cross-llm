@@ -47,7 +47,12 @@ export const openAIPrompt = async (
     usage,
     finishReason: topPChoice.finish_reason,
     elapsedMs,
-    price: calculatePrice(getModel("openai", body.model), usage),
+    price: calculatePrice(
+      getModel(apiOptions.overrideProvider || "openai", body.model),
+      usage,
+    ),
+    raw: completion,
+    rawBody: body,
   };
 };
 
@@ -99,7 +104,10 @@ export const openAIPromptStreaming = async (
                 totalTokens: value.usage!.total_tokens,
               } as Usage;
 
-              price = calculatePrice(getModel("openai", body.model), usage);
+              price = calculatePrice(
+                getModel(apiOptions.overrideProvider || "openai", body.model),
+                usage,
+              );
             }
 
             if (done) {

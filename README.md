@@ -61,6 +61,8 @@ const promptResonse = await systemPrompt("Respond with JSON: { works: true }", "
 // promptResponse.price.total => 0.0000255
 // promptResponse.finishReason => "end_turn"
 // promptResponse.elapsedMs => 888 // milliseconds elapsed
+// promptResponse.raw => provider's raw completion response object, no mapping
+// promptResponse.rawBody => the exact body object passed to the provider's completion endpoint
 ```
 
 #### Text Embedding

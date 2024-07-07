@@ -58,6 +58,8 @@ export const anthropicPrompt = async (
     finishReason: completion.stop_reason,
     elapsedMs,
     price: calculatePrice(getModel("anthropic", body.model), usage),
+    raw: completion,
+    rawBody: body,
   };
 };
 

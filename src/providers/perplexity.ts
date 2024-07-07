@@ -1,28 +1,50 @@
-import type { PromptApiOptions, PromptResponse } from "../interfaces";
-import { openAIPrompt } from "./openai";
-import type { ChatParams } from "openai-fetch";
-
-export interface PerplexityBody extends ChatParams {
-  model: // Meta models
-    | "llama-3-sonar-small-32k-chat"
-    | "llama-3-sonar-small-32k-online"
-    | "llama-3-sonar-large-32k-chat"
-    | "llama-3-sonar-large-32k-online"
-    // Open models
-    | "llama-3-8b-instruct"
-    | "llama-3-70b-instruct"
-    | "mixtral-8x7b-instruct"
-    | string /** https://docs.perplexity.ai/docs/model-cards */;
-}
+import type {
+  PerplexityBody,
+  Price,
+  PromptApiOptions,
+  PromptResponse,
+  Usage,
+} from "../interfaces";
+import { openAIPrompt, openAIPromptStreaming } from "./openai";
+import type { ChatStreamResponse } from "openai-fetch";
 
 export const perplexityPrompt = async (
   body: PerplexityBody,
   apiOptions: PromptApiOptions = {},
 ): Promise<PromptResponse> => {
-  if (!apiOptions.baseUrl) {
-    throw new Error("Please provide a base URL for the Messages API");
+  if (!body.model) {
+    body.model = "llama-3-sonar-small-32k-chat";
   }
 
   // see: https://docs.perplexity.ai/docs/getting-started
-  return openAIPrompt(body, apiOptions);
+  return openAIPrompt(body, {
+    ...apiOptions,
+    baseUrl: "https://api.perplexity.ai",
+    overrideProvider: "perplexity",
+  });
+};
+
+export const perplexityPromptStreaming = async (
+  body: PerplexityBody,
+  onChunk: (text: string, elapsed: number) => void,
+  onStop: (
+    text: string,
+    elapsed: number,
+    usage: Usage,
+    reason: string,
+    price: Price,
+  ) => void,
+  onError: (error: unknown, elapsed: number) => void,
+  apiOptions: PromptApiOptions = {},
+): Promise<ChatStreamResponse | undefined> => {
+  if (!body.model) {
+    body.model = "llama-3-sonar-small-32k-chat";
+  }
+
+  // see: https://docs.perplexity.ai/docs/getting-started
+  return openAIPromptStreaming(body, onChunk, onStop, onError, {
+    ...apiOptions,
+    baseUrl: "https://api.perplexity.ai",
+    overrideProvider: "perplexity",
+  });
 };

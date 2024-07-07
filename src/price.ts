@@ -14,6 +14,6 @@ export const calculatePrice = (model: Model, usage: Usage): Price => {
   return {
     input,
     output,
-    total: input + output,
+    total: input + output + (model.flatFee ? model.flatFee : 0),
   };
 };

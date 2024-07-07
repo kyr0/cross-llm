@@ -16,7 +16,10 @@ import {
 import { huggingFacePrompt } from "./providers/huggingface";
 import { ollamaPrompt, type OllamaBody } from "./providers/ollama";
 import type { ChatParams } from "openai-fetch";
-import { perplexityPrompt } from "./providers/perplexity";
+import {
+  perplexityPrompt,
+  perplexityPromptStreaming,
+} from "./providers/perplexity";
 import type { GenerateRequest } from "cohere-ai/api";
 import type {
   LLMProvider,
@@ -112,12 +115,11 @@ export const systemPrompt = async (
           messages: [
             {
               role: "system",
-              content:
-                "You are artificial intelligence assistant for fact-checking. You must base any verdict on evidence and the scientific method of reasoning, hence reason deductively. You need to respond in JSON format only. Example: { sources: [''], claim: 'Earth is flat.', verdict: false, explanation: '' }",
+              content: promptText,
             },
             {
               role: "user",
-              content: `Claim: ${promptText}`,
+              content: promptText,
             },
           ],
         },
@@ -175,6 +177,29 @@ export const systemPromptStreaming = async (
           ),
           messages: [{ role: "user", content: promptText }],
           system: promptText,
+        },
+        onChunk,
+        onStop,
+        onError,
+        apiOptions,
+      );
+      break;
+    }
+
+    case "perplexity": {
+      await perplexityPromptStreaming(
+        {
+          ...(promptOptions as ChatParams),
+          messages: [
+            {
+              role: "system",
+              content: promptText,
+            },
+            {
+              role: "user",
+              content: promptText,
+            },
+          ],
         },
         onChunk,
         onStop,

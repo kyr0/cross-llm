@@ -107,6 +107,8 @@ export const geminiPrompt = async (
       aggregatedResponse.promptFeedback?.blockReasonMessage || "completed",
     elapsedMs,
     price: calculatePrice(getModel("gemini", body.model), usage),
+    raw: aggregatedResponse,
+    rawBody: body,
   };
   return response;
 };

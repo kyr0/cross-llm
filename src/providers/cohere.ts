@@ -50,6 +50,8 @@ export const coherePrompt = async (
     finishReason: "completed",
     elapsedMs,
     price: calculatePrice(getModel("cohere", body.model), usage),
+    raw: completion,
+    rawBody: body,
   };
   return response;
 };

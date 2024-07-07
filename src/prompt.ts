@@ -16,7 +16,10 @@ import {
 import { huggingFacePrompt } from "./providers/huggingface";
 import { ollamaPrompt, type OllamaBody } from "./providers/ollama";
 import type { ChatParams } from "openai-fetch";
-import { perplexityPrompt } from "./providers/perplexity";
+import {
+  perplexityPrompt,
+  perplexityPromptStreaming,
+} from "./providers/perplexity";
 import type { GenerateRequest } from "cohere-ai/api";
 import type {
   LLMProvider,
@@ -161,6 +164,20 @@ export const promptStreaming = async (
             (message) => message!.role !== "system",
           ) as MessageParam[],
           system: (systemRoleMessage?.content as string) || "",
+        },
+        onChunk,
+        onStop,
+        onError,
+        apiOptions,
+      );
+      break;
+    }
+
+    case "perplexity": {
+      await perplexityPromptStreaming(
+        {
+          ...(promptOptions as ChatParams),
+          messages: messages as ChatParams["messages"],
         },
         onChunk,
         onStop,
