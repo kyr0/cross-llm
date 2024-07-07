@@ -1,10 +1,12 @@
 import { CohereClient } from "cohere-ai";
 import type { GenerateRequest } from "cohere-ai/api";
+import { getModel } from "./models";
 import type {
   PromptApiOptions,
   PromptResponse,
   PromptTokenUsage,
-} from "./prompt";
+} from "./interfaces";
+import { calculatePrice } from "./price";
 
 // uses global fetch() when in non-Node env
 export const coherePrompt = async (
@@ -37,19 +39,25 @@ export const coherePrompt = async (
 
   const completion = await cohere.generate(body as GenerateRequest);
   const end = Date.now();
-  const elapsed = end - start;
+  const elapsedMs = end - start;
+  const usage: PromptTokenUsage = {
+    completionTokens: completion.meta!.tokens?.outputTokens || 0,
+    promptTokens: completion.meta!.tokens?.inputTokens || 0,
+    totalTokens:
+      (completion.meta!.tokens?.inputTokens || 0) +
+      (completion.meta!.tokens?.outputTokens || 0),
+  };
 
   const response = {
     message: completion.generations.map((c) => c.text).join(""),
-    actualUsage: {
-      completionTokens: completion.meta!.tokens?.outputTokens || 0,
-      promptTokens: completion.meta!.tokens?.inputTokens || 0,
-      totalTokens:
-        (completion.meta!.tokens?.inputTokens || 0) +
-        (completion.meta!.tokens?.outputTokens || 0),
-    } as PromptTokenUsage,
+    usage,
     finishReason: "completed",
-    elapsed,
+    elapsedMs,
+    price: calculatePrice(
+      getModel("cohere", body.model),
+      usage.promptTokens || 0,
+      usage.completionTokens || 0,
+    ),
   };
   return response;
 };

@@ -1,13 +1,8 @@
 import { expect, test } from "vitest";
-import {
-  systemPrompt,
-  systemPromptStreaming,
-  type Price,
-  type PromptTokenUsage,
-} from "./prompt";
+import { systemPrompt, systemPromptStreaming } from "./prompt";
 import models from "./models";
 import dotenv from "dotenv";
-import { autoTuneOpenAIHyperparameters } from "./openai";
+import type { Price, PromptTokenUsage } from "./interfaces";
 
 // load api keys from .env
 dotenv.config();

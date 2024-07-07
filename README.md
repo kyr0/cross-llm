@@ -67,3 +67,14 @@ Please write and run unit/integration/e2e tests using `jest` by creating `./src/
 
 `npm run test`
 
+### Build a release
+
+Run the following command to update the `./dist` files:
+
+`npm run build`
+
+Create a new NPM release build:
+
+`npm pack`
+
+

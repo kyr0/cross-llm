@@ -1,5 +1,5 @@
+import type { PromptApiOptions, PromptResponse } from "./interfaces";
 import { openAIPrompt } from "./openai";
-import type { PromptApiOptions, PromptResponse } from "./prompt";
 import type { ChatParams } from "openai-fetch";
 
 export interface PerplexityBody extends ChatParams {

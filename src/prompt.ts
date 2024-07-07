@@ -13,62 +13,19 @@ import {
   mapAnthropicPromptOptions,
   type AnthropicPromptOptionsUnion,
 } from "./anthropic";
-import { type HuggingFaceBody, huggingFacePrompt } from "./huggingface";
+import { huggingFacePrompt } from "./huggingface";
 import { ollamaPrompt, type OllamaBody } from "./ollama";
-import type { GeminiOptions } from "./gemini";
 import type { ChatParams } from "openai-fetch";
 import { perplexityPrompt } from "./perplexity";
 import type { GenerateRequest } from "cohere-ai/api";
-import type { Model, ModelProviderType } from "./models";
-
-export interface PromptTokenUsage {
-  completionTokens?: number;
-  promptTokens?: number;
-  totalTokens?: number;
-}
-
-export type PromptFinishReason =
-  | string
-  | null
-  | "function_call"
-  | "stop"
-  | "length"
-  | "tool_calls"
-  | "content_filter"
-  // Anthropic
-  | "end_turn";
-
-export interface PromptResponse {
-  message?: string | null;
-  usage?: PromptTokenUsage;
-  finishReason: PromptFinishReason;
-  elapsedMs: number;
-  price?: Price;
-}
-
-export interface PromptApiOptions {
-  baseURL?: string;
-  hostingLocation?: string;
-  apiKey?: string;
-
-  /** linear scale [0..1], whereas 0 is close to determinism */
-  autoTuneCreativity?: number;
-
-  /** how much variety of terms is desired? [0..1], whereas 0 means: use the same terms over and over */
-  autoTuneWordVariety?: number;
-
-  /** how much should the model stay focused and on topic? [0..1], whereas 1 means: alot of focus, less topics */
-  autoTuneFocus?: number;
-}
-
-export type PromptOptionsUnion =
-  | Partial<GenerateRequest>
-  | Partial<Anthropic.Messages.MessageCreateParamsNonStreaming>
-  | Partial<Anthropic.Messages.MessageCreateParamsStreaming>
-  | Partial<ChatParams>
-  | Partial<HuggingFaceBody>
-  | Partial<OllamaBody>
-  | Partial<GeminiOptions>;
+import type {
+  ModelProviderType,
+  Price,
+  PromptApiOptions,
+  PromptOptionsUnion,
+  PromptResponse,
+  PromptTokenUsage,
+} from "./interfaces";
 
 // non-streaming, single, system-prompt completion with any LLM
 export const systemPrompt = async (
@@ -249,24 +206,4 @@ export const systemPromptStreaming = async (
       );
     }
   }
-};
-
-export interface Price {
-  input: number;
-  output: number;
-  total: number;
-}
-
-export const calculatePrice = (
-  model: Model,
-  inputTokens: number,
-  outputTokens: number,
-): Price => {
-  const input = model.input * inputTokens;
-  const output = model.output * outputTokens;
-  return {
-    input,
-    output,
-    total: input + output,
-  };
 };

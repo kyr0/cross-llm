@@ -1,13 +1,13 @@
 import Anthropic from "@anthropic-ai/sdk";
-import {
-  calculatePrice,
-  type Price,
-  type PromptApiOptions,
-  type PromptResponse,
-  type PromptTokenUsage,
-} from "./prompt";
 import type { ContentBlock } from "@anthropic-ai/sdk/resources/messages.mjs";
 import { getModel } from "./models";
+import type {
+  Price,
+  PromptApiOptions,
+  PromptResponse,
+  PromptTokenUsage,
+} from "./interfaces";
+import { calculatePrice } from "./price";
 
 // uses global fetch() by default
 export const anthropicPrompt = async (
@@ -45,22 +45,22 @@ export const anthropicPrompt = async (
   );
   const end = Date.now();
   const elapsedMs = end - start;
+  const usage: PromptTokenUsage = {
+    completionTokens: completion.usage.output_tokens,
+    promptTokens: completion.usage.input_tokens!,
+    totalTokens: completion.usage.input_tokens + completion.usage.output_tokens,
+  };
 
   return {
     // @ts-ignore
     message: completion.content.map((c) => c.text).join(""),
-    usage: {
-      completionTokens: completion.usage.output_tokens,
-      promptTokens: completion.usage.input_tokens,
-      totalTokens:
-        completion.usage.input_tokens + completion.usage.output_tokens,
-    } as PromptTokenUsage,
+    usage,
     finishReason: completion.stop_reason,
     elapsedMs,
     price: calculatePrice(
       getModel("anthropic", body.model),
-      completion.usage.input_tokens,
-      completion.usage.output_tokens,
+      usage.promptTokens,
+      usage.completionTokens,
     ),
   };
 };

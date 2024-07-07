@@ -22,6 +22,7 @@
     "print-models": "tsx ./scripts/print-models.ts",
     "build": "pkgroll"
   },
+  "files": ["dist", "README.md", "LICENSE", "package.json"],
   "author": "Aron Homberg <info@aron-homberg.de>",
   "license": "MIT",
   "dependencies": {

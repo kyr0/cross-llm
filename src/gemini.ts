@@ -1,5 +1,11 @@
-import type { PromptApiOptions, PromptResponse } from "./prompt";
+import type {
+  PromptApiOptions,
+  PromptResponse,
+  PromptTokenUsage,
+} from "./interfaces";
+import { getModel } from "./models";
 import { type GenerateContentRequest, VertexAI } from "@google-cloud/vertexai";
+import { calculatePrice } from "./price";
 
 export interface GeminiOptions extends GenerateContentRequest {
   model: string;
@@ -89,20 +95,26 @@ export const geminiPrompt = async (
     aggregatedResponse.candidates![0].content.parts[0].text;
 
   const end = Date.now();
-  const elapsed = end - start;
+  const elapsedMs = end - start;
 
+  const usage: PromptTokenUsage = {
+    completionTokens: aggregatedResponse.usageMetadata!.candidatesTokenCount!,
+    promptTokens: aggregatedResponse.usageMetadata!.promptTokenCount!,
+    totalTokens:
+      aggregatedResponse.usageMetadata!.candidatesTokenCount! +
+      aggregatedResponse.usageMetadata!.promptTokenCount!,
+  };
   const response = {
-    message: fullTextResponse,
-    actualUsage: {
-      completion_tokens: aggregatedResponse.usageMetadata!.candidatesTokenCount,
-      prompt_tokens: aggregatedResponse.usageMetadata!.promptTokenCount,
-      total_tokens:
-        aggregatedResponse.usageMetadata!.candidatesTokenCount! +
-        aggregatedResponse.usageMetadata!.promptTokenCount!,
-    },
+    message: fullTextResponse!,
+    usage,
     finishReason:
       aggregatedResponse.promptFeedback?.blockReasonMessage || "completed",
-    elapsed,
+    elapsedMs,
+    price: calculatePrice(
+      getModel("gemini", body.model),
+      usage.promptTokens || 0,
+      usage.completionTokens || 0,
+    ),
   };
   return response;
 };
