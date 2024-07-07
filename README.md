@@ -34,7 +34,11 @@ AI providers and models **to be supported soon**:
 
 2. 💡 Take a look at the super-simple [code examples](./examples/).
 
+```ts
+import { systemPrompt } from "cross-llm";
 
+const response = 
+```
 
 3. 📋 Copy & Paste -> enjoy! 🎉
 
@@ -44,4 +48,22 @@ Simply create an issue or fork this repository, clone it and create a Pull Reque
 I'm just implementing the features, AI model providers, cost model mappings that I need,
 but feel free to simply add your models or implement new AI providers. 
 Every contribution is very welcome! 🤗
+
+### List/verify supported models
+
+Please verify that your model/provider has been added correctly in `./src/models`.
+
+`npm run print-models`
+
+### Write and verify example code
+
+Please add example code for when you implement a new AI provider in `./examples`.
+
+`npm run example openai.ts`
+
+### Write tests for new AI providers
+
+Please write and run unit/integration/e2e tests using `jest` by creating `./src/*.spec.ts` test suites:
+
+`npm run test`
 
