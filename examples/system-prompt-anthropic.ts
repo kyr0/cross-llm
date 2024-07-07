@@ -1,26 +1,13 @@
 import dotenv from "dotenv";
-import { prompt } from "../src";
+import { systemPrompt } from "../src";
 
 // load api keys from .env
 dotenv.config();
 
 console.log("Promise-based Anthropic Claude 3 Haiku:")
 
-const result = await prompt(
-  [
-    {
-      role: "user",
-      content: "Let's have fun with JSON, shall we?",
-    },
-    {
-      role: "assistant",
-      content: "Yeah. Let's have fun with JSON.",
-    },
-    {
-      role: "user",
-      content: "Respond with JSON: { works: true }",
-    },
-  ],
+const result = await systemPrompt(
+  "Respond with JSON: { works: true }",
   "anthropic",
   {
     // model identifier of the provider

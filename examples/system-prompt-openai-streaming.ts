@@ -1,27 +1,14 @@
 import dotenv from "dotenv";
-import { promptStreaming, type PromptFinishReason, type PromptTokenUsage } from "../src";
+import { systemPromptStreaming, type PromptFinishReason, type PromptTokenUsage } from "../src";
 
 // load api keys from .env
 dotenv.config();
 
-console.log("Streaming Anthropic Claude 3 Haiku:")
+console.log("Streaming OpenAI GPT-4 Turbo:")
 
-await promptStreaming(
-  [
-    {
-      role: "user",
-      content: "Let's have fun with JSON, shall we?",
-    },
-    {
-      role: "assistant",
-      content: "Yeah. Let's have fun with JSON.",
-    },
-    {
-      role: "user",
-      content: "Respond with JSON: { works: true }",
-    },
-  ],
-  "anthropic",
+await systemPromptStreaming(
+  "Respond with JSON: { works: true }",
+  "openai",
   async (partialText: string, elapsedMs: number) => {
     // onChunk
 
@@ -48,12 +35,14 @@ await promptStreaming(
   },
   {
     // model identifier of the provider
-    model: "claude-3-haiku-20240307",
+    model: "gpt-4-turbo",
     temperature: 0.7,
-    max_tokens: 4096,
+    response_format: {
+      type: "json_object",
+    }
   },
   {
     // union of options passed down, mapped internally
-    apiKey: process.env[`anthropic_api_key`],
+    apiKey: process.env[`openai_api_key`],
   },
 );

@@ -14,10 +14,14 @@ AI models _currently_ supported:
 -  ✅ **OpenAI**: Any OpenAI LLM, including GPT-4 and newer models.
    - ✅ Promise-based
    - ✅ Streaming 
+   - ✅ Single message system prompt (instruct)
+   - ✅ Multi-message prompt (chat)
    - ✅ Cost model 
 -  ✅ **Anthropic**: The whole Claude model-series, including Opus.
    - ✅ Promise-based
    - ✅ Streaming 
+   - ✅ Single message system prompt (instruct)
+   - ✅ Multi-message prompt (chat)
    - ✅ Cost model 
 
 AI providers and models **to be supported soon**:

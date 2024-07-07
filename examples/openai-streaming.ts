@@ -1,13 +1,26 @@
 import dotenv from "dotenv";
-import { systemPromptStreaming, type PromptFinishReason, type PromptTokenUsage } from "../src";
+import { promptStreaming, type PromptFinishReason, type PromptTokenUsage } from "../src";
 
 // load api keys from .env
 dotenv.config();
 
 console.log("Streaming OpenAI GPT-4 Turbo:")
 
-await systemPromptStreaming(
-  "Respond with JSON: { works: true }",
+await promptStreaming(
+  [
+    {
+      role: "user",
+      content: "Let's have fun with JSON, shall we?",
+    },
+    {
+      role: "assistant",
+      content: "Yeah. Let's have fun with JSON.",
+    },
+    {
+      role: "user",
+      content: "Respond with JSON: { works: true }",
+    },
+  ],
   "openai",
   async (partialText: string, elapsedMs: number) => {
     // onChunk

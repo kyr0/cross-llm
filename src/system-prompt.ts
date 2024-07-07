@@ -26,11 +26,10 @@ import type {
   PromptResponse,
   PromptTokenUsage,
 } from "./interfaces";
-import type { MessageParam } from "@anthropic-ai/sdk/resources/index.mjs";
 
 // non-streaming, single, system-prompt completion with any LLM
-export const prompt = async (
-  messages: ChatParams["messages"],
+export const systemPrompt = async (
+  promptText: string,
   providerType: ModelProviderType,
   promptOptions: PromptOptionsUnion = {},
   apiOptions: PromptApiOptions = {},
@@ -40,15 +39,12 @@ export const prompt = async (
       return coherePrompt(
         {
           ...(promptOptions as GenerateRequest),
-          prompt: messages[0]?.content as string,
+          prompt: promptText,
         },
         apiOptions,
       );
     }
     case "anthropic": {
-      const systemRoleMessage = messages.find(
-        (message) => message!.role === "system",
-      );
       return anthropicPrompt(
         {
           ...autoTuneAnthropicHyperparameters(
@@ -57,10 +53,8 @@ export const prompt = async (
             ),
             apiOptions,
           ),
-          messages: messages.filter(
-            (message) => message!.role !== "system",
-          ) as MessageParam[],
-          system: (systemRoleMessage?.content as string) || "",
+          messages: [{ role: "user", content: promptText }],
+          system: promptText,
         },
         apiOptions,
       );
@@ -69,7 +63,12 @@ export const prompt = async (
       return huggingFacePrompt(
         {
           ...(promptOptions as ChatParams),
-          messages: messages as ChatParams["messages"],
+          messages: [
+            {
+              role: "system",
+              content: promptText,
+            },
+          ],
         },
         apiOptions,
       );
@@ -78,7 +77,12 @@ export const prompt = async (
       return ollamaPrompt(
         {
           ...(promptOptions as OllamaBody),
-          messages: messages as ChatParams["messages"],
+          messages: [
+            {
+              role: "system",
+              content: promptText,
+            },
+          ],
         },
         apiOptions,
       );
@@ -105,7 +109,17 @@ export const prompt = async (
       return perplexityPrompt(
         {
           ...(promptOptions as ChatParams),
-          messages: messages as ChatParams["messages"],
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are artificial intelligence assistant for fact-checking. You must base any verdict on evidence and the scientific method of reasoning, hence reason deductively. You need to respond in JSON format only. Example: { sources: [''], claim: 'Earth is flat.', verdict: false, explanation: '' }",
+            },
+            {
+              role: "user",
+              content: `Claim: ${promptText}`,
+            },
+          ],
         },
         apiOptions,
       );
@@ -118,7 +132,12 @@ export const prompt = async (
             mapOpenAIPromptOptions(promptOptions as ChatParams),
             apiOptions,
           ),
-          messages: messages as ChatParams["messages"],
+          messages: [
+            {
+              role: "system",
+              content: promptText,
+            },
+          ],
         },
         apiOptions,
       );
@@ -126,8 +145,8 @@ export const prompt = async (
   }
 };
 
-export const promptStreaming = async (
-  messages: ChatParams["messages"],
+export const systemPromptStreaming = async (
+  promptText: string,
   providerType: ModelProviderType,
   onChunk: (text: string, elapsedMs: number) => void,
   onStop: (
@@ -145,10 +164,7 @@ export const promptStreaming = async (
     // TODO: implement streaming for all providers
 
     case "anthropic": {
-      const systemRoleMessage = messages.find(
-        (message) => message!.role === "system",
-      );
-
+      console.log("calling anthropic streaming");
       await anthropicPromptStreaming(
         {
           ...autoTuneAnthropicHyperparameters(
@@ -157,10 +173,8 @@ export const promptStreaming = async (
             ),
             apiOptions,
           ),
-          messages: messages.filter(
-            (message) => message!.role !== "system",
-          ) as MessageParam[],
-          system: (systemRoleMessage?.content as string) || "",
+          messages: [{ role: "user", content: promptText }],
+          system: promptText,
         },
         onChunk,
         onStop,
@@ -178,7 +192,12 @@ export const promptStreaming = async (
             mapOpenAIPromptOptions(promptOptions as ChatParams),
             apiOptions,
           ),
-          messages: messages as ChatParams["messages"],
+          messages: [
+            {
+              role: "system",
+              content: promptText,
+            },
+          ],
         },
         onChunk,
         onStop,

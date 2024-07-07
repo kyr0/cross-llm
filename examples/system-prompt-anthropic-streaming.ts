@@ -1,26 +1,13 @@
 import dotenv from "dotenv";
-import { promptStreaming, type PromptFinishReason, type PromptTokenUsage } from "../src";
+import { systemPromptStreaming, type PromptFinishReason, type PromptTokenUsage } from "../src";
 
 // load api keys from .env
 dotenv.config();
 
 console.log("Streaming Anthropic Claude 3 Haiku:")
 
-await promptStreaming(
-  [
-    {
-      role: "user",
-      content: "Let's have fun with JSON, shall we?",
-    },
-    {
-      role: "assistant",
-      content: "Yeah. Let's have fun with JSON.",
-    },
-    {
-      role: "user",
-      content: "Respond with JSON: { works: true }",
-    },
-  ],
+await systemPromptStreaming(
+  "Respond with JSON: { works: true }",
   "anthropic",
   async (partialText: string, elapsedMs: number) => {
     // onChunk

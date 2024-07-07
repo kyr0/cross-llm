@@ -1,6 +1,6 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import type { GenerateRequest } from "cohere-ai/api";
-import type { ChatParams } from "openai-fetch";
+import type { ChatMessage, ChatParams } from "openai-fetch";
 import type { HuggingFaceBody } from "./providers/huggingface";
 import type { OllamaBody } from "./providers/ollama";
 import type { GeminiOptions } from "./providers/gemini";
@@ -53,6 +53,10 @@ export type PromptOptionsUnion =
   | Partial<HuggingFaceBody>
   | Partial<OllamaBody>
   | Partial<GeminiOptions>;
+
+export type PromptMessagesUnion =
+  | Partial<Anthropic.Messages.MessageParam[]>
+  | Partial<ChatMessage[]>;
 
 export interface Price {
   input: number;
