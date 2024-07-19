@@ -10,8 +10,6 @@
 
 The most simple API to use LLMs. It can hardly be easier than **1 function call** 😉
 
-> And what's bes? 
-
 AI models _currently_ supported:
 -  ✅ **OpenAI**: Any OpenAI LLM, including GPT-4 and newer models.
    - ✅ Promise-based
