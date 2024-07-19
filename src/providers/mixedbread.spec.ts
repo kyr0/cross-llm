@@ -7,17 +7,18 @@ import type { EmbeddingProvider } from "../interfaces";
 // load api keys from .env
 dotenv.config();
 
-test("Embedding voyage-large-2-instruct", async () => {
-  const model = models["voyageai-voyage-large-2-instruct"];
+test("Embedding deepset-mxbai-embed-de-large-v1", async () => {
+  const model =
+    models["mixedbread-ai-mixedbread-ai/deepset-mxbai-embed-de-large-v1"];
 
   console.log("model", model);
 
   const result = await embed(
-    ["Let's have fun with JSON, shall we?", "Yeah. Let's have fun with JSON."],
+    "Hallo, Welt!",
     model.provider as EmbeddingProvider,
     {
       // union of parameters passed down, mapped internally
-      model: model.id as "voyage-large-2-instruct",
+      model: model.id as "mixedbread-ai/deepset-mxbai-embed-de-large-v1",
     },
     {
       // union of options passed down, mapped internally
@@ -32,15 +33,14 @@ test("Embedding voyage-large-2-instruct", async () => {
   expect(typeof result.usage?.totalTokens).toEqual("number");
   expect(result.data).toBeDefined();
   expect(Array.isArray(result.data)).toEqual(true);
-  expect(result.data.length).toEqual(2);
+  expect(result.data.length).toEqual(1);
+
+  console.log("result", result);
+
   expect(typeof result.data[0]).toEqual("object");
-  expect(typeof result.data[1]).toEqual("object");
   expect(typeof result.data[0].index).toEqual("number");
-  expect(typeof result.data[1].index).toEqual("number");
   expect(Array.isArray(result.data[0].embedding)).toEqual(true);
-  expect(Array.isArray(result.data[1].embedding)).toEqual(true);
   expect(result.data[0].embedding.length).toEqual(1024);
-  expect(result.data[1].embedding.length).toEqual(1024);
 }, 100000);
 
 /*

@@ -4,11 +4,13 @@
 
 </span>
 
-> Use every LLM in every environment with one simple API. Works in Node.js/Bun/Deno, Service Workers, Web Extensions, PWAs.
+> Use LLM and Vector Embedding APIs on the web platform. Uses standard `fetch()` and thus runs everywhere, including in Service Workers.
 
 ## 🌟 Features
 
 The most simple API to use LLMs. It can hardly be easier than **1 function call** 😉
+
+> And what's bes? 
 
 AI models _currently_ supported:
 -  ✅ **OpenAI**: Any OpenAI LLM, including GPT-4 and newer models.
@@ -33,6 +35,8 @@ AI models _currently_ supported:
    - ✅ Cost model (including flat fee)
    - 〰️ Text Embedding (_Perplexity doesn't provide embedding endpoints_)
 -  ✅ **VoyageAI**: Text Embedding models
+   - ✅ Text Embedding
+-  ✅ **Mixedbread AI**: Text Embedding models, specifically for **German**
    - ✅ Text Embedding
 
 AI providers and models **to be supported soon**:

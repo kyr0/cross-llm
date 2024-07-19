@@ -231,7 +231,7 @@ test("Embedding - text-embedding-3-small", async () => {
     model.provider as EmbeddingProvider,
     {
       // union of parameters passed down, mapped internally
-      model: model.id,
+      model: model.id as "text-embedding-3-small",
     },
     {
       // union of options passed down, mapped internally

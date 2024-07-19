@@ -58,8 +58,8 @@ export type PromptOptionsUnion =
   | Partial<PerplexityBody>;
 
 export type PromptMessagesUnion =
-  | Partial<Anthropic.Messages.MessageParam[]>
-  | Partial<ChatMessage[]>;
+  | Partial<Array<Anthropic.Messages.MessageParam>>
+  | Partial<Array<Messages>>;
 
 export interface Price {
   input: number;
@@ -75,9 +75,10 @@ export type LLMProvider =
   | "ollama"
   | "gemini"
   | "perplexity"
-  | "voyageai";
+  | "voyageai"
+  | "mixedbread-ai";
 
-export type EmbeddingProvider = "openai" | "voyageai";
+export type EmbeddingProvider = "openai" | "voyageai" | "mixedbread-ai";
 
 export interface Model {
   input: number;
@@ -101,11 +102,25 @@ export interface Models {
 }
 
 export interface EmbeddingParams {
-  model?: string;
+  model?: // voyage
+    | "voyage-large-2-instruct"
+    // openai
+    | "text-embedding-3-small"
+    | "text-embedding-3-large"
+    | "text-embedding-ada-002"
+    // mixedbread
+    | "mixedbread-ai/mxbai-embed-large-v1"
+    | "mixedbread-ai/deepset-mxbai-embed-de-large-v1";
   truncation?: boolean;
   input_type?: null | "query" | "document";
   encoding_format?: null | "base64" | "float";
+  // supported by voyage, mixedbread
   dimensions?: number;
+  // supported by mixedbread
+  normalized?: boolean;
+  // supported by mixedbread
+  truncation_strategy?: "start" | "end" | "none";
+  // supported by openai
   user?: string;
 }
 

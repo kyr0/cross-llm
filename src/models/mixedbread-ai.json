@@ -1,0 +1,24 @@
+{
+  "mixedbread-ai-mixedbread-ai/mxbai-embed-large-v1": {
+    "provider": "mixedbread-ai",
+    "input": 0,
+    "output": 0,
+    "maxContextTokens": 512,
+    "maxInputTokens": 512,
+    "minDimensions": 64,
+    "dimensions": 1024,
+    "id": "mixedbread-ai/mxbai-embed-large-v1",
+    "label": "Mixedbread Mxbai Embed Large V1"
+  },
+  "mixedbread-ai-mixedbread-ai/deepset-mxbai-embed-de-large-v1": {
+    "provider": "mixedbread-ai",
+    "input": 0,
+    "output": 0,
+    "maxContextTokens": 512,
+    "maxInputTokens": 512,
+    "minDimensions": 64,
+    "dimensions": 1024,
+    "id": "mixedbread-ai/deepset-mxbai-embed-de-large-v1",
+    "label": "Deepset Mixedbread Mxbai Embed DE Large V1"
+  }
+}
